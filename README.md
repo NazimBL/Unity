@@ -11,7 +11,9 @@ https://github.com/scriptmanship/KinectVR
 
 
 
+
 Notes :
+RiftCat , using a pc server to build Occulus rift with better quality ( processing on server , display on phone )
 All ports below 1000 are system ports
 Serializable Field = saved in rom 
 wrraper : translate info between languages
