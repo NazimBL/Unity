@@ -6,12 +6,14 @@ using UnityEngine.VR;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.EventSystems;
+
+
 
 
 public class Menu_Net : NetworkManager {
 
 	public NetworkDiscovery discovery;
-
 
 
 	void OnEnable(){
@@ -28,8 +30,9 @@ public class Menu_Net : NetworkManager {
 		if (scene.buildIndex == 0) {
 			DisableVr ();
 			StartCoroutine (SetupMenu ());
+		} else {
+			EnableVr ();
 		}
-		 else EnableVr ();
 	}
 
 		
@@ -57,7 +60,7 @@ public class Menu_Net : NetworkManager {
 	public void StartGame(){
 		
 		if(discovery.running) discovery.StopBroadcast ();
-		print ("Startinging client");
+		//print ("Startinging client");
 		NetworkManager.singleton.StartHost ();
 		discovery.Initialize();
 		discovery.StartAsServer();
@@ -71,21 +74,15 @@ public class Menu_Net : NetworkManager {
 		discovery.StartAsClient ();
 
 	}
-
-	/*public void Quit(){
-		print ("Quiting client");
-		NetworkManager.singleton.StopHost ();
-	}*/
 		
-
 	public override void OnStartHost()
 	{
-		Debug.Log ("Start Host");
+		//Debug.Log ("Start Host");
 	}
 
 	public override void OnStopHost ()
 	{
-		print ("stop client");
+		//print ("stop client");
 		if(discovery.running) discovery.StopBroadcast ();
 
 	}
@@ -109,7 +106,7 @@ public class Menu_Net : NetworkManager {
 
 	}
 
-
+	
 	 void EnableVr(){
 		StartCoroutine(LoadDevice("Cardboard", true));
 	}
