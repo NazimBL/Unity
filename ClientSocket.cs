@@ -6,21 +6,27 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-public class ClientSocket : MonoBehaviour {
+ublic class ClientSocket : MonoBehaviour {
+
+
+	public int id;
 
 	public void StartClient() {
 		// Data buffer for incoming data.
 		byte[] bytes = new byte[1024];
-		
+
 		// Connect to a remote device.
 		try {
-			// Establish the remote endpoint for the socket.
-			// This example uses port 11000 on the local computer.
-			//IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-				//IPAddress ipAddress = ipHostInfo.AddressList[0];
-			IPAddress ipAddress =IPAddress.Loopback;
-			IPEndPoint remoteEP = new IPEndPoint(ipAddress,11000);
-			
+
+			IPAddress ipAddress;
+			//192.168.4.1
+			//station point address
+			ipAddress=IPAddress.Parse("192.168.0.152");
+			Debug.Log("client sending");
+			IPEndPoint remoteEP = new IPEndPoint(ipAddress,80);
+		
+
+
 			// Create a TCP/IP  socket.
 			Socket sender = new Socket(AddressFamily.InterNetwork, 
 			                           SocketType.Stream, ProtocolType.Tcp );
@@ -28,38 +34,28 @@ public class ClientSocket : MonoBehaviour {
 			// Connect the socket to the remote endpoint. Catch any errors.
 			try {
 				sender.Connect(remoteEP);
-
 				// Encode the data string into a byte array.
-				byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>");
+				byte[] msg = Encoding.ASCII.GetBytes(id+"<EOF>");
+
+
 				// Send the data through the socket.
 				int bytesSent = sender.Send(msg);
-
-				
 				// Release the socket.
 				sender.Shutdown(SocketShutdown.Both);
 				sender.Close();
 				
 			} catch (ArgumentNullException ane) {
-				Console.WriteLine("ArgumentNullException : {0}",ane.ToString());
+				Debug.Log("ArgumentNullException : {0}"+ane.ToString());
 			} catch (SocketException se) {
-				Console.WriteLine("SocketException : {0}",se.ToString());
+				Debug.Log("SocketException : {0}"+se.ToString());
 			} catch (Exception e) {
-				Console.WriteLine("Unexpected exception : {0}", e.ToString());
+				Debug.Log("Unexpected exception : {0}"+e.ToString());
 			}
 			
 		} catch (Exception e) {
-			Console.WriteLine( e.ToString());
+			Debug.Log(e.ToString());
 		}
 	}
-	
 
-
-	void echo(Socket sender,byte[] bytes){
-		// Receive the response from the remote device.
-		int bytesRec = sender.Receive(bytes);
-		Console.WriteLine("Echoed test = {0}",
-		                  Encoding.ASCII.GetString(bytes,0,bytesRec));
-	
-	}
 
 }
